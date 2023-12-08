@@ -1,0 +1,15 @@
+{
+  "_output_dir": "/home/webyneter/Projects/personal/merge-files/src",
+  "_repo_dir": "/home/webyneter/.cookiecutters/cookiecutter-hypermodern-python",
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Nikita Shupeyko",
+  "copyright_year": "2023",
+  "development_status": "Development Status :: 5 - Production/Stable",
+  "email": "webyneter@gmail.com",
+  "friendly_name": "Merge Files",
+  "github_user": "webyneter",
+  "license": "MIT",
+  "package_name": "merge_files",
+  "project_name": "merge-files",
+  "version": "0.0.0"
+}
