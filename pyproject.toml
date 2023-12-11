@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "merge-files"
-version = "0.0.0"
+version = "1.0.0"
 description = "Merge Files"
 authors = ["Nikita Shupeyko <webyneter@gmail.com>"]
 license = "MIT"
