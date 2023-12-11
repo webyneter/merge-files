@@ -10,12 +10,12 @@ from tests.conftest import parametrize_programming_language
 
 
 @parametrize_programming_language
-@pytest.mark.parametrize("output_relative_file_path", {False, True})
+@pytest.mark.parametrize("output_absolute_file_path", {False, True})
 def test_merge_files(
     mocker: MockerFixture,
     event_loop: AbstractEventLoop,
     programming_language,
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
     cli_runner: CliRunner,
     tmp_test_dir_path: Path,
 ):
@@ -40,7 +40,7 @@ merged content
             "--output-chunk-end-template",
             output_chunk_end_template,
         ]
-        + (["--output-relative-file-path"] if output_relative_file_path else []),
+        + (["--output-absolute-file-path"] if output_absolute_file_path else []),
     )
 
     print(mock_merge.mock_calls)
@@ -48,7 +48,7 @@ merged content
         programming_language.value,
         tmp_test_dir_path,
         {".json"},
-        output_relative_file_path,
+        output_absolute_file_path,
         output_chunk_beginning_template,
         output_chunk_end_template,
     )
@@ -57,11 +57,11 @@ merged content
     assert output_file_path.read_text() == output_content
 
 
-@pytest.mark.parametrize("output_relative_file_path", {False, True})
+@pytest.mark.parametrize("output_absolute_file_path", {False, True})
 def test_merge_files_raises_given_unsupported_programming_language(
     cli_runner: CliRunner,
     tmp_test_dir_path: Path,
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
 ):
     """
     Test that merge_files raises an exception when given an unsupported programming language.
@@ -78,7 +78,7 @@ def test_merge_files_raises_given_unsupported_programming_language(
             "--output-chunk-end-template",
             "### END",
         ]
-        + (["--output-relative-file-path"] if output_relative_file_path else []),
+        + (["--output-absolute-file-path"] if output_absolute_file_path else []),
     )
 
     assert isinstance(result.exception, SystemExit)

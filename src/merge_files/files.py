@@ -12,7 +12,7 @@ async def merge(
     programming_language: ProgrammingLanguage,
     dir_path: Path,
     extra_file_extensions: AbstractSet[str],
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
     output_chunk_beginning_template: str,
     output_chunk_end_template: str,
 ) -> str:
@@ -31,9 +31,9 @@ async def merge(
                 continue
             async with aiofiles.open(absolute_file_path, "r") as file:
                 file_path = (
-                    absolute_file_path.relative_to(dir_path)
-                    if output_relative_file_path
-                    else absolute_file_path
+                    absolute_file_path
+                    if output_absolute_file_path
+                    else absolute_file_path.relative_to(dir_path)
                 )
                 merged_file_contents.append(
                     output_chunk_beginning_template.format(file_path=file_path)

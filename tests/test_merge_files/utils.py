@@ -9,7 +9,7 @@ def create_directory_structure(
     root_dir_path: Path,
     resources_dir_path: Path,
     programming_language: ProgrammingLanguage,
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
     extra_extensions: AbstractSet[str],
     num_nested_dirs: int,
 ) -> AbstractSet[Path]:
@@ -22,7 +22,7 @@ def create_directory_structure(
         root_dir_path,
         resources_dir_path,
         file_extensions,
-        output_relative_file_path,
+        output_absolute_file_path,
     )
 
     nested_dir_path = root_dir_path
@@ -34,7 +34,7 @@ def create_directory_structure(
             nested_dir_path,
             resources_dir_path,
             file_extensions,
-            output_relative_file_path,
+            output_absolute_file_path,
         )
 
     return file_paths
@@ -44,7 +44,7 @@ def _create_files_in_directory(
     dir_path: Path,
     resources_dir_path: Path,
     file_extensions: AbstractSet[str],
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
 ) -> AbstractSet[Path]:
     file_paths = set()
 
@@ -59,7 +59,7 @@ def _create_files_in_directory(
             tpl_file_contents.replace(
                 "{file_path}",
                 str(file_path.relative_to(dir_path))
-                if output_relative_file_path
+                if output_absolute_file_path
                 else str(file_path),
             )
             .replace("{name_1}", "John")

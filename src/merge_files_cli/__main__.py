@@ -37,9 +37,11 @@ from merge_files_cli.utils import log_success
     "All extensions must be prefixed with a dot.",
 )
 @click.option(
-    "--output-relative-file-path",
+    "--output-absolute-file-path",
     is_flag=True,
-    help="Output relative file path instead of absolute file path.",
+    show_default=True,
+    default=False,
+    help="Output absolute file path instead of relative.",
 )
 @click.option(
     "--output-chunk-beginning-template",
@@ -55,7 +57,7 @@ def merge_files(
     programming_language: str,
     directory_path: Path,
     include_extension: Tuple[str, ...],
-    output_relative_file_path: bool,
+    output_absolute_file_path: bool,
     output_chunk_beginning_template: str,
     output_chunk_end_template: str,
 ):
@@ -79,7 +81,7 @@ def merge_files(
             programming_language,
             directory_path,
             set(include_extension),
-            output_relative_file_path,
+            output_absolute_file_path,
             output_chunk_beginning_template,
             output_chunk_end_template,
         )
