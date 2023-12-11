@@ -1,0 +1,1 @@
+The file you're looking at, namely, {file_path}, is a text file.
