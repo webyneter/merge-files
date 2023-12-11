@@ -95,7 +95,7 @@ def merge_files(
         output_file.write(output_content)
 
     log_success(
-        f"The matching {directory_path} files were successfully merged into {output_file_path}"
+        f"The matching files were successfully merged into {output_file_path}"
     )
 
 
