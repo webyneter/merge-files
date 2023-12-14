@@ -93,7 +93,7 @@ show_error_codes = true
 show_error_context = true
 
 [tool.pytest.ini_options]
-addopts = "--verbose --cov"
+addopts = "-vv --cov"
 asyncio_mode = "auto"
 
 [build-system]
