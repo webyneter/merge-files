@@ -1,4 +1,5 @@
 import asyncio
+import importlib.metadata
 from pathlib import Path
 from typing import Tuple
 
@@ -11,7 +12,7 @@ from merge_files_cli.utils import log_success
 
 
 @click.command()
-@click.version_option()
+@click.version_option(importlib.metadata.version("merge-files"))
 @click.argument(
     "programming-language",
 )
@@ -94,9 +95,7 @@ def merge_files(
     with output_file_path.open(mode="w") as output_file:
         output_file.write(output_content)
 
-    log_success(
-        f"The matching files were successfully merged into {output_file_path}"
-    )
+    log_success(f"The matching files were successfully merged into {output_file_path}")
 
 
 if __name__ == "__main__":

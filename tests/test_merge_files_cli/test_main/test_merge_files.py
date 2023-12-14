@@ -1,3 +1,4 @@
+import importlib.metadata
 from asyncio import AbstractEventLoop
 from pathlib import Path
 
@@ -7,6 +8,18 @@ from pytest_mock import MockerFixture
 
 from merge_files_cli.__main__ import merge_files
 from tests.conftest import parametrize_programming_language
+
+
+def test_version(cli_runner: CliRunner):
+    """
+    Test that merge_files prints the correct version.
+    """
+    result = cli_runner.invoke(merge_files, ["--version"])
+
+    assert result.exit_code == 0
+    assert result.output.startswith(
+        f"merge-files, version {importlib.metadata.version('merge-files')}"
+    )
 
 
 @parametrize_programming_language
