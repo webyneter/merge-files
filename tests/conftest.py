@@ -32,5 +32,5 @@ def tmp_test_dir_path(tmp_path: Path) -> Path:
     Fixture for creating a mock directory for testing.
     """
     test_dir_path = tmp_path / "test_dir"
-    test_dir_path.mkdir()
+    test_dir_path.mkdir(parents=True)
     return test_dir_path

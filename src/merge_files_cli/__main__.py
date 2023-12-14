@@ -1,5 +1,8 @@
 import asyncio
 import importlib.metadata
+from collections.abc import Iterable
+from os import linesep
+from os.path import commonpath
 from pathlib import Path
 from typing import Tuple
 
@@ -18,6 +21,7 @@ from merge_files_cli.utils import log_success
 )
 @click.argument(
     "directory-path",
+    nargs=-1,
     type=click.Path(
         exists=True,
         file_okay=False,
@@ -56,7 +60,7 @@ from merge_files_cli.utils import log_success
 )
 def merge_files(
     programming_language: str,
-    directory_path: Path,
+    directory_path: Tuple[Path, ...],
     include_extension: Tuple[str, ...],
     output_absolute_file_path: bool,
     output_chunk_beginning_template: str,
@@ -68,32 +72,44 @@ def merge_files(
 
     Supported programming languages: python
     """
-    log_info(f"Beginning to merge the matching {directory_path} files...")
-
     programming_languages = [pl for pl in ProgrammingLanguage]
     if programming_language not in programming_languages:
         raise click.BadArgumentUsage(
             f"{programming_language} is not supported. Choose from: {programming_languages}"
         )
 
-    loop = asyncio.get_event_loop()
-    output_content = loop.run_until_complete(
+    directory_paths = set(directory_path)
+    if not directory_paths:
+        raise click.BadArgumentUsage("At least one directory path must be specified.")
+
+    include_extensions = set(include_extension)
+
+    log_info("Beginning to merge the matching files...")
+
+    tasks = (
         merge(
             programming_language,
-            directory_path,
-            set(include_extension),
+            dp,
+            include_extensions,
             output_absolute_file_path,
             output_chunk_beginning_template,
             output_chunk_end_template,
         )
+        for dp in directory_paths
     )
+    loop = asyncio.get_event_loop()
+    task_results: Iterable[str] = loop.run_until_complete(asyncio.gather(*tasks))
     loop.close()
 
+    if len(directory_paths) > 1:
+        output_file_dir_path = Path(commonpath(directory_paths))  # type: ignore
+    else:
+        output_file_dir_path = directory_paths.pop()
     output_file_extension = ".txt"
-    output_file_name = f"merged.{directory_path.name}{output_file_extension}"
-    output_file_path = directory_path / output_file_name
+    output_file_name = f"merged{output_file_extension}"
+    output_file_path = output_file_dir_path / output_file_name
     with output_file_path.open(mode="w") as output_file:
-        output_file.write(output_content)
+        output_file.write(linesep.join(task_results))
 
     log_success(f"The matching files were successfully merged into {output_file_path}")
 
