@@ -85,7 +85,7 @@ def merge_files(
 ):
     """
     Merge files in a directory into a single file.
-    The resulting file will be placed in the same directory, named merged.<directory-name>.txt
+    The resulting file will be placed in the same directory, named merged.txt
 
     Supported programming languages: python
     """
