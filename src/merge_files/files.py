@@ -17,6 +17,7 @@ async def merge(
     output_chunk_beginning_template: str,
     output_chunk_end_template: str,
     output_preserve_blank_lines: bool,
+    output_preserve_empty_files: bool,
 ) -> str:
     """
     Merge files in a directory into a single string.
@@ -31,6 +32,7 @@ async def merge(
 
             async with aiofiles.open(absolute_file_path, mode="r") as file:
                 file_content = await file.read()
+
                 if not output_preserve_blank_lines:
                     non_blank_lines = []
                     inside_triple_single_quote_string = False
@@ -62,6 +64,10 @@ async def merge(
                         # If the line that's outside a multiline is not blank, keep it:
                         non_blank_lines.append(line)
                     file_content = linesep.join(non_blank_lines)
+
+                if not output_preserve_empty_files and not file_content.strip():
+                    # This check comes AFTER every other check that can potentially affect file_content.
+                    continue
 
                 absolute_or_relative_file_path = (
                     absolute_file_path if output_absolute_file_path else absolute_file_path.relative_to(dir_path)

@@ -4,7 +4,6 @@ import pytest
 from click.testing import CliRunner
 
 
-parametrize_output_absolute_file_path = pytest.mark.parametrize("output_absolute_file_path", {False, True})
 parametrize_directory_paths = pytest.mark.parametrize(
     ("directory_paths", "expected_common_dir_path"),
     (

@@ -7,6 +7,9 @@ from merge_files.programming_languages import ProgrammingLanguage
 
 
 parametrize_programming_language = pytest.mark.parametrize("programming_language", [pl for pl in ProgrammingLanguage])
+parametrize_output_absolute_file_path = pytest.mark.parametrize("output_absolute_file_path", {False, True})
+parametrize_output_preserve_blank_lines = pytest.mark.parametrize("output_preserve_blank_lines", {False, True})
+parametrize_output_preserve_empty_files = pytest.mark.parametrize("output_preserve_empty_files", {False, True})
 
 
 @pytest.fixture()

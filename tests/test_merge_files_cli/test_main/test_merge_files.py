@@ -9,9 +9,11 @@ from pytest_mock import MockerFixture
 
 from merge_files.programming_languages import ProgrammingLanguage
 from merge_files_cli.__main__ import merge_files
+from tests.conftest import parametrize_output_absolute_file_path
+from tests.conftest import parametrize_output_preserve_blank_lines
+from tests.conftest import parametrize_output_preserve_empty_files
 from tests.conftest import parametrize_programming_language
 from tests.test_merge_files_cli.conftest import parametrize_directory_paths
-from tests.test_merge_files_cli.conftest import parametrize_output_absolute_file_path
 
 
 def test_version(cli_runner: CliRunner):
@@ -24,6 +26,8 @@ def test_version(cli_runner: CliRunner):
     assert result.output.startswith(f"merge-files, version {importlib.metadata.version('merge-files')}")
 
 
+@parametrize_output_preserve_empty_files
+@parametrize_output_preserve_blank_lines
 @parametrize_output_absolute_file_path
 @parametrize_directory_paths
 @parametrize_programming_language
@@ -36,6 +40,8 @@ def test_merge_files(
     directory_paths: Sequence[Path],
     expected_common_dir_path: Path,
     output_absolute_file_path: bool,
+    output_preserve_blank_lines: bool,
+    output_preserve_empty_files: bool,
 ):
     """
     Test that merge_files merges files correctly.
@@ -64,7 +70,9 @@ merged content
             "--output-chunk-end-template",
             output_chunk_end_template,
         ]
-        + (["--output-absolute-file-path"] if output_absolute_file_path else []),
+        + (["--output-absolute-file-path"] if output_absolute_file_path else [])
+        + (["--output-preserve-blank-lines"] if output_preserve_blank_lines else [])
+        + (["--output-preserve-empty-files"] if output_preserve_empty_files else []),
     )
 
     for tmp_directory_path in tmp_directory_paths:
@@ -75,6 +83,8 @@ merged content
             output_absolute_file_path,
             output_chunk_beginning_template,
             output_chunk_end_template,
+            output_preserve_blank_lines,
+            output_preserve_empty_files,
         )
     assert result.exit_code == 0
     output_file_path = tmp_expected_common_dir_path / "merged.txt"

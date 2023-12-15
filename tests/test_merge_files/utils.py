@@ -14,6 +14,9 @@ def create_directory_structure(
     num_nested_dirs: int,
     remove_blank_lines: bool = False,
 ) -> AbstractSet[Path]:
+    """
+    Create a directory structure for testing.
+    """
     pl_file_extensions = PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION[programming_language]
     file_extensions = extra_extensions | pl_file_extensions
 
@@ -50,7 +53,15 @@ def _create_files_in_directory(
     output_absolute_file_path: bool,
     remove_blank_lines: bool = False,
 ) -> AbstractSet[Path]:
+    """
+    Create files in a directory for testing.
+    """
     file_paths = set()
+
+    for file_extension in file_extensions:
+        empty_file_path = dir_path / f"empty-file{file_extension}"
+        file_paths.add(empty_file_path)
+        empty_file_path.touch()
 
     for file_extension in file_extensions:
         file_path = dir_path / f"file{file_extension}"
