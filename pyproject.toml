@@ -105,7 +105,7 @@ show_error_codes = true
 show_error_context = true
 
 [tool.pytest.ini_options]
-addopts = "-vv --cov"
+addopts = "-vv --cov -n auto"
 asyncio_mode = "auto"
 
 [build-system]
