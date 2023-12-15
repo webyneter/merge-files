@@ -21,9 +21,7 @@ def test_version(cli_runner: CliRunner):
     result = cli_runner.invoke(merge_files, ["--version"])
 
     assert result.exit_code == 0
-    assert result.output.startswith(
-        f"merge-files, version {importlib.metadata.version('merge-files')}"
-    )
+    assert result.output.startswith(f"merge-files, version {importlib.metadata.version('merge-files')}")
 
 
 @parametrize_output_absolute_file_path
@@ -80,9 +78,7 @@ merged content
         )
     assert result.exit_code == 0
     output_file_path = tmp_expected_common_dir_path / "merged.txt"
-    assert output_file_path.read_text() == linesep.join(
-        [mock_merge_output] * len(directory_paths)
-    )
+    assert output_file_path.read_text() == linesep.join([mock_merge_output] * len(directory_paths))
 
 
 def test_merge_files_raises_given_unsupported_programming_language(

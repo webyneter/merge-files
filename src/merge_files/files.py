@@ -6,6 +6,7 @@ import aiofiles
 
 from merge_files.constants import PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION
 from merge_files.programming_languages import ProgrammingLanguage
+from merge_files.text.utils import check_unbalanced_triple_quotes
 
 
 async def merge(
@@ -15,32 +16,60 @@ async def merge(
     output_absolute_file_path: bool,
     output_chunk_beginning_template: str,
     output_chunk_end_template: str,
+    output_preserve_blank_lines: bool,
 ) -> str:
     """
     Merge files in a directory into a single string.
     """
-    file_extensions = (
-        PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION[programming_language]
-        | extra_file_extensions
-    )
+    file_extensions = PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION[programming_language] | extra_file_extensions
 
     merged_file_contents = []
     for file_extension in file_extensions:
         for absolute_file_path in dir_path.rglob(f"*{file_extension}"):
             if not absolute_file_path.is_file():
                 continue
-            async with aiofiles.open(absolute_file_path, "r") as file:
-                file_path = (
-                    absolute_file_path
-                    if output_absolute_file_path
-                    else absolute_file_path.relative_to(dir_path)
+
+            async with aiofiles.open(absolute_file_path, mode="r") as file:
+                file_content = await file.read()
+                if not output_preserve_blank_lines:
+                    non_blank_lines = []
+                    inside_triple_single_quote_string = False
+                    inside_triple_double_quote_string = False
+                    for line in file_content.split(linesep):
+                        line_check = check_unbalanced_triple_quotes(line)
+                        if (
+                            line_check.has_unbalanced_triple_single_quote
+                            and line_check.unbalanced_triple_single_quote_comes_first
+                        ):
+                            inside_triple_single_quote_string = True
+                            inside_triple_double_quote_string = False
+                        if (
+                            line_check.has_unbalanced_triple_double_quote
+                            and line_check.unbalanced_triple_double_quote_comes_first
+                        ):
+                            inside_triple_single_quote_string = False
+                            inside_triple_double_quote_string = True
+
+                        if inside_triple_single_quote_string or inside_triple_double_quote_string:
+                            # Keep all lines inside a multiline:
+                            non_blank_lines.append(line)
+                            continue
+
+                        if not line.strip():
+                            # If the line that's outside a multiline is blank, skip it:
+                            continue
+
+                        # If the line that's outside a multiline is not blank, keep it:
+                        non_blank_lines.append(line)
+                    file_content = linesep.join(non_blank_lines)
+
+                absolute_or_relative_file_path = (
+                    absolute_file_path if output_absolute_file_path else absolute_file_path.relative_to(dir_path)
                 )
                 merged_file_contents.append(
-                    output_chunk_beginning_template.format(file_path=file_path)
+                    output_chunk_beginning_template.format(file_path=absolute_or_relative_file_path)
                 )
-                merged_file_contents.append(await file.read())
-                merged_file_contents.append(
-                    output_chunk_end_template.format(file_path=file_path)
-                )
+                merged_file_contents.append(file_content)
+                merged_file_contents.append(output_chunk_end_template.format(file_path=absolute_or_relative_file_path))
 
     return linesep.join(merged_file_contents)

@@ -14,6 +14,7 @@ from tests.test_merge_files.utils import create_directory_structure
 
 @parametrize_programming_language
 @pytest.mark.parametrize("output_absolute_file_path", {False, True})
+@pytest.mark.parametrize("output_preserve_blank_lines", {False, True})
 @pytest.mark.parametrize("num_nested_dirs", range(3))
 @pytest.mark.parametrize("jsonl_present", {False, True})
 @pytest.mark.parametrize("txt_present", {False, True})
@@ -23,6 +24,7 @@ async def test_merge(
     resources_dir_path: Path,
     programming_language: ProgrammingLanguage,
     output_absolute_file_path: bool,
+    output_preserve_blank_lines: bool,
     num_nested_dirs: int,
     jsonl_present: bool,
     txt_present: bool,
@@ -37,13 +39,14 @@ async def test_merge(
         extra_extensions.add(YAML_FILE_EXTENSION)
     output_chunk_beginning_template = "# BEGIN {file_path}"
     output_chunk_end_template = "# END {file_path}"
-    file_paths = create_directory_structure(
+    paths_to_files_with_expected_contents = create_directory_structure(
         tmp_test_dir_path,
         resources_dir_path,
         programming_language,
         output_absolute_file_path,
         extra_extensions,
         num_nested_dirs,
+        remove_blank_lines=not output_preserve_blank_lines,
     )
 
     merged_file_contents = await merge(
@@ -53,8 +56,9 @@ async def test_merge(
         output_absolute_file_path,
         output_chunk_beginning_template,
         output_chunk_end_template,
+        output_preserve_blank_lines,
     )
 
-    for file_path in file_paths:
-        async with aiofiles.open(file_path, "r") as file:
-            assert await file.read() in merged_file_contents
+    for path_to_file_with_expected_contents in paths_to_files_with_expected_contents:
+        async with aiofiles.open(path_to_file_with_expected_contents, "r") as file_with_expected_contents:
+            assert await file_with_expected_contents.read() in merged_file_contents

@@ -1,29 +1,12 @@
 [
   {
     "name": "{name_1}",
-
     "age": "{age_1}",
-
     "city": "{city_1}"
   },
-
   {
-
-
-
-
     "name": "{name_2}",
-
-
-
-
-
     "age": "{age_2}",
-
-
-
     "city": "{city_2}",
-
-
   }
 ]

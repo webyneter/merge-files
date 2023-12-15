@@ -6,9 +6,7 @@ import pytest
 from merge_files.programming_languages import ProgrammingLanguage
 
 
-parametrize_programming_language = pytest.mark.parametrize(
-    "programming_language", [pl for pl in ProgrammingLanguage]
-)
+parametrize_programming_language = pytest.mark.parametrize("programming_language", [pl for pl in ProgrammingLanguage])
 
 
 @pytest.fixture()

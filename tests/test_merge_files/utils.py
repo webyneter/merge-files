@@ -12,6 +12,7 @@ def create_directory_structure(
     output_absolute_file_path: bool,
     extra_extensions: AbstractSet[str],
     num_nested_dirs: int,
+    remove_blank_lines: bool = False,
 ) -> AbstractSet[Path]:
     pl_file_extensions = PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION[programming_language]
     file_extensions = extra_extensions | pl_file_extensions
@@ -23,6 +24,7 @@ def create_directory_structure(
         resources_dir_path,
         file_extensions,
         output_absolute_file_path,
+        remove_blank_lines=remove_blank_lines,
     )
 
     nested_dir_path = root_dir_path
@@ -35,6 +37,7 @@ def create_directory_structure(
             resources_dir_path,
             file_extensions,
             output_absolute_file_path,
+            remove_blank_lines=remove_blank_lines,
         )
 
     return file_paths
@@ -45,6 +48,7 @@ def _create_files_in_directory(
     resources_dir_path: Path,
     file_extensions: AbstractSet[str],
     output_absolute_file_path: bool,
+    remove_blank_lines: bool = False,
 ) -> AbstractSet[Path]:
     file_paths = set()
 
@@ -53,14 +57,14 @@ def _create_files_in_directory(
         file_paths.add(file_path)
         file_path.touch()
 
-        tpl_file_path = resources_dir_path / f"tpl.file{file_extension}"
+        tpl_file_name_infix = ".no-blanks" if remove_blank_lines else ""
+        tpl_file_name = f"tpl{tpl_file_name_infix}.file{file_extension}"
+        tpl_file_path = resources_dir_path / tpl_file_name
         tpl_file_contents = tpl_file_path.read_text()
         file_contents = (
             tpl_file_contents.replace(
                 "{file_path}",
-                str(file_path.relative_to(dir_path))
-                if output_absolute_file_path
-                else str(file_path),
+                str(file_path.relative_to(dir_path)) if output_absolute_file_path else str(file_path),
             )
             .replace("{name_1}", "John")
             .replace("{age_1}", "30")

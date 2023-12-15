@@ -1,7 +1,4 @@
 ---
-
-
 # The file you're looking at, namely, {file_path}, is a YAML file.
 - { age: "{age_1}", city: "{city_1}", name: "{name_1}" }
-
 - { age: "{age_2}", city: "{city_2}", name: "{name_2}" }

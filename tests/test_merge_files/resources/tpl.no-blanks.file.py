@@ -1,6 +1,4 @@
 from typing import Dict
-
-
 data: Dict[str, str] = {
     "file_path": "{file_path}",
     "name_1": "{name_1}",
@@ -10,8 +8,6 @@ data: Dict[str, str] = {
     "age_2": "{age_2}",
     "city_2": "{city_2}",
 }
-
-
 multiline_string = """Hey there!
 The line break below:
 
@@ -23,9 +19,7 @@ deleted. Neither should these:
 Would you like to know more?
 
 """
-
 # Just a simple Python comment.
-
 """
 Multi-line Python comment.
 
@@ -51,14 +45,9 @@ lots of them again:
 
 
 """
-
 t = 2992
-
-
 a = 121010
 """triple-quote one-liner"""
-
-
 """triple-quote one-liner with ''' quotes inside"""
 """
 
@@ -76,10 +65,7 @@ multi-line
 
 
 """
-
 """triple-quote one-liner"""
-
-
 '''triple-quote one-liner with """""" quotes inside'''
 '''
 triple-quote
@@ -95,7 +81,6 @@ this is it
 
 
 '''
-
 '''
 """"""
 
@@ -109,7 +94,6 @@ hey there!
 """
 
 '''
-
 '''
 """
 

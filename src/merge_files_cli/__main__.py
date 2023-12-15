@@ -58,6 +58,15 @@ from merge_files_cli.utils import log_success
     default="### END OF FILE {file_path}",
     help="The string (template) designating the end of a file chunk in the output file.",
 )
+@click.option(
+    "--output-preserve-blank-lines",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Preserve blank lines from original files in the output file.",
+)
+# TODO: option to exclude empty files (those that are `not content.strip()`)
+# TODO: option to remove python comments from python files (only, and only)
 def merge_files(
     programming_language: str,
     directory_path: Tuple[Path, ...],
@@ -65,6 +74,7 @@ def merge_files(
     output_absolute_file_path: bool,
     output_chunk_beginning_template: str,
     output_chunk_end_template: str,
+    output_preserve_blank_lines: bool,
 ):
     """
     Merge files in a directory into a single file.
@@ -74,9 +84,7 @@ def merge_files(
     """
     programming_languages = [pl for pl in ProgrammingLanguage]
     if programming_language not in programming_languages:
-        raise click.BadArgumentUsage(
-            f"{programming_language} is not supported. Choose from: {programming_languages}"
-        )
+        raise click.BadArgumentUsage(f"{programming_language} is not supported. Choose from: {programming_languages}")
 
     directory_paths = set(directory_path)
     if not directory_paths:
@@ -94,6 +102,7 @@ def merge_files(
             output_absolute_file_path,
             output_chunk_beginning_template,
             output_chunk_end_template,
+            output_preserve_blank_lines,
         )
         for dp in directory_paths
     )
