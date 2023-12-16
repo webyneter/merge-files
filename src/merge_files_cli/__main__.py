@@ -72,7 +72,6 @@ from merge_files_cli.utils import log_success
     default=False,
     help="Preserve empty files in the output file.",
 )
-# TODO: option to remove python comments from python files (only, and only)
 def merge_files(
     programming_language: str,
     directory_path: Tuple[Path, ...],
