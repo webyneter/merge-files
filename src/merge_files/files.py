@@ -17,10 +17,13 @@ async def merge(
     output_chunk_end_template: str,
     output_preserve_blank_lines: bool,
     output_preserve_empty_files: bool,
+    output_relative_to_dir_path: Path | None = None,
 ) -> str:
     """
     Merge files in a directory into a single string.
     """
+    output_relative_to_dir_path = output_relative_to_dir_path or dir_path
+
     file_extensions = PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION[programming_language] | extra_file_extensions
 
     merged_file_contents = []
@@ -44,7 +47,9 @@ async def merge(
                     continue
 
                 absolute_or_relative_file_path = (
-                    absolute_file_path if output_absolute_file_path else absolute_file_path.relative_to(dir_path)
+                    absolute_file_path
+                    if output_absolute_file_path
+                    else absolute_file_path.relative_to(output_relative_to_dir_path)
                 )
                 merged_file_contents.append(
                     output_chunk_beginning_template.format(file_path=absolute_or_relative_file_path)

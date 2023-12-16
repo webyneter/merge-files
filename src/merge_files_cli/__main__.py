@@ -98,7 +98,7 @@ def merge_files(
 
     include_extensions = set(include_extension)
 
-    log_info("Beginning to merge the matching files...")
+    output_file_dir_path = Path(commonpath(directory_paths))  # type: ignore
 
     tasks = (
         merge(
@@ -110,17 +110,17 @@ def merge_files(
             output_chunk_end_template,
             output_preserve_blank_lines,
             output_preserve_empty_files,
+            output_relative_to_dir_path=output_file_dir_path,
         )
         for dp in directory_paths
     )
+
+    log_info("Beginning to merge the matching files...")
+
     loop = asyncio.get_event_loop()
     task_results: Iterable[str] = loop.run_until_complete(asyncio.gather(*tasks))
     loop.close()
 
-    if len(directory_paths) > 1:
-        output_file_dir_path = Path(commonpath(directory_paths))  # type: ignore
-    else:
-        output_file_dir_path = directory_paths.pop()
     output_file_extension = ".txt"
     output_file_name = f"merged{output_file_extension}"
     output_file_path = output_file_dir_path / output_file_name

@@ -85,6 +85,7 @@ merged content
             output_chunk_end_template,
             output_preserve_blank_lines,
             output_preserve_empty_files,
+            output_relative_to_dir_path=tmp_expected_common_dir_path,
         )
     assert result.exit_code == 0
     output_file_path = tmp_expected_common_dir_path / "merged.txt"
