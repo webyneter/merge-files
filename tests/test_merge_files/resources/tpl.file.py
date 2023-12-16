@@ -54,6 +54,20 @@ lots of them again:
 
 t = 2992
 
+def myfunc(this: str) -> str:
+    """Hey there!
+
+    sdsdds ss sd d '''
+
+
+    ''' '''
+
+
+    ddsdd '''
+    """
+    return this
+
+
 
 a = 121010
 """triple-quote one-liner"""
@@ -95,6 +109,35 @@ this is it
 
 
 '''
+
+
+def another_func(this: str) -> str:
+    """Hey there! '''"""
+
+    def __another_func():
+        """
+
+        '''
+
+
+        '''''''
+
+
+        """
+        return
+
+    # Nope
+
+
+    ### Nope-nope
+
+    return this
+
+    '''sdd
+
+    """
+    '''
+
 
 '''
 """"""

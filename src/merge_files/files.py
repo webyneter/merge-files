@@ -6,7 +6,6 @@ import aiofiles
 
 from merge_files.constants import PROGRAMMING_LANGUAGE_TO_FILE_EXTENSION
 from merge_files.programming_languages import ProgrammingLanguage
-from merge_files.text.utils import check_unbalanced_triple_quotes
 
 
 async def merge(
@@ -35,34 +34,9 @@ async def merge(
 
                 if not output_preserve_blank_lines:
                     non_blank_lines = []
-                    inside_triple_single_quote_string = False
-                    inside_triple_double_quote_string = False
                     for line in file_content.split(linesep):
-                        line_check = check_unbalanced_triple_quotes(line)
-                        if (
-                            line_check.has_unbalanced_triple_single_quote
-                            and line_check.unbalanced_triple_single_quote_comes_first
-                        ):
-                            inside_triple_single_quote_string = True
-                            inside_triple_double_quote_string = False
-                        if (
-                            line_check.has_unbalanced_triple_double_quote
-                            and line_check.unbalanced_triple_double_quote_comes_first
-                        ):
-                            inside_triple_single_quote_string = False
-                            inside_triple_double_quote_string = True
-
-                        if inside_triple_single_quote_string or inside_triple_double_quote_string:
-                            # Keep all lines inside a multiline:
+                        if line.strip():
                             non_blank_lines.append(line)
-                            continue
-
-                        if not line.strip():
-                            # If the line that's outside a multiline is blank, skip it:
-                            continue
-
-                        # If the line that's outside a multiline is not blank, keep it:
-                        non_blank_lines.append(line)
                     file_content = linesep.join(non_blank_lines)
 
                 if not output_preserve_empty_files and not file_content.strip():

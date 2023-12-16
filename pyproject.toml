@@ -28,7 +28,6 @@ pytest-xdist = {extras = ["psutil"], version = "^3.5.0"}
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"
 pytest-asyncio = "^0.23.2"
-pydantic = "^2.5.2"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.10.0"
